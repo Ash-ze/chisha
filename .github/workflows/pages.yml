@@ -1,0 +1,50 @@
+# 推送到 main 时构建并发布到 GitHub Pages。
+# 首次使用：仓库 Settings → Pages → Build and deployment → Source 选 "GitHub Actions"。
+# 可选：部署了投票 Worker 后，在 Settings → Secrets and variables → Actions → Variables
+#       新建变量 VITE_API_BASE = https://chisha-api.<你的子域>.workers.dev ，重新运行本工作流即可启用实时群投票。
+#       不设置时投票页会显示"需要部署后端"的提示，并提供不需要服务器的"链接投票"。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # .npmrc 里有 legacy-peer-deps=true，npm ci 会自动读取
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
