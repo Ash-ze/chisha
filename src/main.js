@@ -13,7 +13,7 @@ const tabVote = h('a', { href: '#/vote', class: 'tab', id: 'tab-vote' }, '群投
 
 clear(app).append(
   h('header', { class: 'top' },
-    h('h1', null, h('span', { class: 'logo', 'aria-hidden': 'true' }, '🍚'), '今天吃啥'),
+    h('h1', null, h('span', { class: 'logo', 'aria-hidden': 'true' }, '🍚'), '今天吃啥 · What to Eat'),
     h('nav', { class: 'tabs' }, tabWheel, tabVote),
   ),
   view,

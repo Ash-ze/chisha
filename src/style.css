@@ -74,11 +74,12 @@ main { flex: 1; }
   background: var(--bg);
   padding: calc(10px + env(safe-area-inset-top)) 0 10px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
-.top h1 { font-size: 22px; margin: 0; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+.top h1 { font-size: 22px; margin: 0; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; }
 .logo { font-size: 24px; }
 
 .tabs { display: flex; background: var(--card); border-radius: 999px; padding: 4px; box-shadow: var(--shadow); }
